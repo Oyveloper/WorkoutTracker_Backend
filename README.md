@@ -1,5 +1,5 @@
-#Workout Tracker Backend
+# Workout Tracker Backend
 
-##About
+## About
 Backend for a workout tracker webapp, built in Java.
 
