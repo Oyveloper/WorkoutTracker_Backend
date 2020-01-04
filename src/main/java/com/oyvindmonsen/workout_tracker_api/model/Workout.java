@@ -1,10 +1,27 @@
 package com.oyvindmonsen.workout_tracker_api.model;
 
+import java.util.ArrayList;
+
 public class Workout {
 
-    String name;
-    String description;
-    int count;
+    private String name;
+    private String measurement;
+    private ArrayList<String> progressions;
+    public ArrayList<WorkoutEntry> entries;
+
+
+
+
+    float getMaxRep() {
+        float maxRep = 0;
+        for (int i = 0; i < this.entries.size(); i++) {
+            maxRep += this.entries.get(i).getAmmount();
+        }
+
+        return maxRep;
+    }
+
+
 
     public String getName() {
         return name;
@@ -14,19 +31,24 @@ public class Workout {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMeasurement() {
+        return measurement;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setMeasurement(String measurement) {
+        this.measurement = measurement;
     }
 
-    public int getCount() {
-        return count;
+    public ArrayList<String> getProgressions() {
+        return progressions;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setProgressions(ArrayList<String> progressions) {
+        this.progressions = progressions;
+    }
+
+    public void addProgression(String progression) {
+        this.progressions.add(progression);
     }
 }
+

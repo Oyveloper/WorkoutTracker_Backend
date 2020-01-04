@@ -17,8 +17,15 @@ public class User {
     private String passwordHash;
 
 
-//    String [] items;
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    // Getters and setters
     public String getName() {
         return name;
     }
