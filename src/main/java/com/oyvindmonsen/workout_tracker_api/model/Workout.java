@@ -7,20 +7,27 @@ public class Workout {
     private String name;
     private String measurement;
     private ArrayList<String> progressions;
+    private float maxRep;
     public ArrayList<WorkoutEntry> entries;
 
 
-
-
-    float getMaxRep() {
-        float maxRep = 0;
-        for (int i = 0; i < this.entries.size(); i++) {
-            maxRep += this.entries.get(i).getAmmount();
-        }
-
-        return maxRep;
+    public Workout() {
+        entries = new ArrayList<WorkoutEntry>();
     }
 
+
+
+    private void updateMaxRep() {
+        float max = 0;
+        for (WorkoutEntry entry : entries) {
+            if (entry.getAmmount() > max) {
+                max = entry.getAmmount();
+            }
+
+        }
+
+        this.maxRep = max;
+    }
 
 
     public String getName() {
@@ -48,7 +55,22 @@ public class Workout {
     }
 
     public void addProgression(String progression) {
+
         this.progressions.add(progression);
+
+    }
+
+    public float getMaxRep() {
+        return maxRep;
+    }
+
+    public void setMaxRep(float maxRep) {
+        this.maxRep = maxRep;
+    }
+
+    public void addEntry(WorkoutEntry entry) {
+        entries.add(entry);
+        updateMaxRep();
     }
 }
 

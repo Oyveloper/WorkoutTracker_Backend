@@ -31,7 +31,7 @@ public class UserDataController {
     private MyUserDetailsService userDetailsService;
 
     @PostMapping("/addWorkoutEntry")
-    String addWorkoutEntry(
+    ResponseEntity<?> addWorkoutEntry(
             @RequestHeader("Authorization") String jwt,
             @RequestParam String name,
             @RequestParam String progression,
@@ -52,7 +52,7 @@ public class UserDataController {
 
         entryRepo.save(entry);
 
-        return "Success";
+        return ResponseEntity.ok().body("Success");
 
     }
 
@@ -62,25 +62,30 @@ public class UserDataController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(jwt));
         User user = userRepo.findByEmail(userDetails.getUsername());
 
+
         ArrayList<Workout> workouts = new ArrayList<Workout>();
+
 
         WorkoutEntry[] entries = entryRepo.findAllByUserId(user.getId());
 
         for (int i = 0; i < entries.length; i++) {
             WorkoutEntry entry = entries[i];
+            System.out.println(entry.getWorkoutName());
 
 
             boolean added = false;
-            for (int j = 0; j < workouts.size(); j++) {
+            for (int j = 0; j < workouts.size() && !added; j++) {
 
                 Workout workout = workouts.get(j);
                 if (workout.getName().equals(entry.getWorkoutName())) {
-                    workout.entries.add(entry);
+                    workout.addEntry(entry);
+                    added = true;
                     if (!workout.getProgressions().contains(entry.getProgression())) {
                         workout.addProgression(entry.getProgression());
                     }
                 }
             }
+
 
             if (!added) {
                 Workout workout = new Workout();
@@ -89,13 +94,21 @@ public class UserDataController {
                 ArrayList<String> progressions = new ArrayList<String>();
                 progressions.add(entry.getProgression());
                 workout.setProgressions(progressions);
+                workout.addEntry(entry);
                 workouts.add(workout);
             }
         }
 
 
+        for (Workout workout:
+             workouts) {
+            System.out.println(workout.getName());
+            System.out.println(workout.entries.size());
+        }
 
-        return ResponseEntity.ok(workouts.size());
+
+
+        return ResponseEntity.ok(workouts);
 
     }
 }

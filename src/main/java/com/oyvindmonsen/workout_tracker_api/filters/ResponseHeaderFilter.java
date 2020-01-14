@@ -21,7 +21,6 @@ public class ResponseHeaderFilter implements Filter {
                 "Access-Control-Allow-Headers", "*"
         );
 
-        System.out.println("Applying filter");
         chain.doFilter(request, response);
     }
 

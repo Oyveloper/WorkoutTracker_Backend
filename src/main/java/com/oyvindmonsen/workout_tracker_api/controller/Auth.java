@@ -5,6 +5,7 @@ import com.oyvindmonsen.workout_tracker_api.model.AuthenticationResponse;
 import com.oyvindmonsen.workout_tracker_api.model.User;
 import com.oyvindmonsen.workout_tracker_api.model.UserRepository;
 import com.oyvindmonsen.workout_tracker_api.services.MyUserDetailsService;
+import org.apache.coyote.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class Auth {
 
     @PostMapping("/signup")
     @ResponseBody
-    String signup(@RequestParam String email, @RequestParam String name, @RequestParam String password) throws JSONException {
+    ResponseEntity<String> signup(@RequestParam String email, @RequestParam String name, @RequestParam String password) throws JSONException {
         JSONObject response = new JSONObject();
 
 
@@ -82,12 +83,11 @@ public class Auth {
 
         }
 
-        return response.toString();
+        return ResponseEntity.ok().body(response.toString());
     }
 
 
     @PostMapping("/login")
-    @ResponseBody
     public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) throws Exception{
         try {
             authenticationManager.authenticate(
