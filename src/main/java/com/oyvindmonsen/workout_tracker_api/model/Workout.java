@@ -10,7 +10,6 @@ public class Workout {
     private float maxRep;
     public ArrayList<WorkoutEntry> entries;
 
-
     public Workout() {
         entries = new ArrayList<WorkoutEntry>();
     }

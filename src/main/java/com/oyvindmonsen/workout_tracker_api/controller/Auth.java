@@ -1,11 +1,10 @@
 package com.oyvindmonsen.workout_tracker_api.controller;
 
-import com.oyvindmonsen.workout_tracker_api.util.JWTUtil;
 import com.oyvindmonsen.workout_tracker_api.model.AuthenticationResponse;
 import com.oyvindmonsen.workout_tracker_api.model.User;
 import com.oyvindmonsen.workout_tracker_api.model.UserRepository;
 import com.oyvindmonsen.workout_tracker_api.services.MyUserDetailsService;
-import org.apache.coyote.Response;
+import com.oyvindmonsen.workout_tracker_api.util.JWTUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,4 +105,6 @@ public class Auth {
 
 
     }
+
+
 }

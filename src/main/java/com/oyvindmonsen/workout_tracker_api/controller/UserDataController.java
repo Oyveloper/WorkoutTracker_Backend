@@ -4,12 +4,10 @@ package com.oyvindmonsen.workout_tracker_api.controller;
 import com.oyvindmonsen.workout_tracker_api.model.*;
 import com.oyvindmonsen.workout_tracker_api.services.MyUserDetailsService;
 import com.oyvindmonsen.workout_tracker_api.util.JWTUtil;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -57,22 +55,18 @@ public class UserDataController {
     }
 
     @GetMapping("/workoutlist")
-    ResponseEntity<?> workoutList(@RequestHeader("Authorization") String jwt) throws Exception {
+    ResponseEntity<?> workoutList(@RequestHeader("Authorization") String jwt) {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(jwt));
         User user = userRepo.findByEmail(userDetails.getUsername());
 
 
-        ArrayList<Workout> workouts = new ArrayList<Workout>();
+        ArrayList<Workout> workouts = new ArrayList<>();
 
 
         WorkoutEntry[] entries = entryRepo.findAllByUserId(user.getId());
 
-        for (int i = 0; i < entries.length; i++) {
-            WorkoutEntry entry = entries[i];
-            System.out.println(entry.getWorkoutName());
-
-
+        for (WorkoutEntry entry : entries) {
             boolean added = false;
             for (int j = 0; j < workouts.size() && !added; j++) {
 
@@ -91,21 +85,13 @@ public class UserDataController {
                 Workout workout = new Workout();
                 workout.setName(entry.getWorkoutName());
                 workout.setMeasurement(entry.getMeasurement());
-                ArrayList<String> progressions = new ArrayList<String>();
+                ArrayList<String> progressions = new ArrayList<>();
                 progressions.add(entry.getProgression());
                 workout.setProgressions(progressions);
                 workout.addEntry(entry);
                 workouts.add(workout);
             }
         }
-
-
-        for (Workout workout:
-             workouts) {
-            System.out.println(workout.getName());
-            System.out.println(workout.entries.size());
-        }
-
 
 
         return ResponseEntity.ok(workouts);
