@@ -12,10 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Security;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -102,7 +104,27 @@ public class Auth {
 
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
 
+    }
 
+    @GetMapping("/isAuthenticated")
+    public boolean isAuthenticated(@RequestHeader (name="Authentication") String auth) {
+
+        String jwt = null;
+        String username = null;
+
+        if (auth != null) {
+            jwt = auth;
+            username = jwtUtil.extractUsername(jwt);
+        }
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+            return jwtUtil.validateToken(jwt, userDetails);
+
+        }
+
+        return false;
 
     }
 
