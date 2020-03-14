@@ -32,10 +32,11 @@ public class UserDataController {
     ResponseEntity<?> addWorkoutEntry(
             @RequestHeader("Authorization") String jwt,
             @RequestParam String name,
-            @RequestParam String progression,
             @RequestParam (value="date") @DateTimeFormat(pattern = "ddMMyy") Date date,
-            @RequestParam float ammount
+            @RequestParam float ammount,
+            @RequestParam boolean moreIsGoodSorting
             ) {
+
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(jwt));
         User user = userRepo.findByEmail(userDetails.getUsername());
@@ -44,9 +45,7 @@ public class UserDataController {
         entry.setWorkoutName(name);
         entry.setDate(date);
         entry.setAmmount(ammount);
-        entry.setProgression(progression);
-
-        System.out.println(entry.getWorkoutName());
+        entry.setMoreIsBetterSorting(moreIsGoodSorting);
 
         entryRepo.save(entry);
 
@@ -74,9 +73,7 @@ public class UserDataController {
                 if (workout.getName().equals(entry.getWorkoutName())) {
                     workout.addEntry(entry);
                     added = true;
-                    if (!workout.getProgressions().contains(entry.getProgression())) {
-                        workout.addProgression(entry.getProgression());
-                    }
+
                 }
             }
 
@@ -85,9 +82,8 @@ public class UserDataController {
                 Workout workout = new Workout();
                 workout.setName(entry.getWorkoutName());
                 workout.setMeasurement(entry.getMeasurement());
+                workout.setMoreIsBetterSorting(entry.isMoreIsBetterSorting());
                 ArrayList<String> progressions = new ArrayList<>();
-                progressions.add(entry.getProgression());
-                workout.setProgressions(progressions);
                 workout.addEntry(entry);
                 workouts.add(workout);
             }

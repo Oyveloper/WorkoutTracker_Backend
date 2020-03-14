@@ -1,33 +1,22 @@
 package com.oyvindmonsen.workout_tracker_api.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.function.Predicate;
 
 public class Workout {
 
     private String name;
     private String measurement;
-    private ArrayList<String> progressions;
-    private float maxRep;
-    public ArrayList<WorkoutEntry> entries;
+    private boolean moreIsBetterSorting;
+    private ArrayList<WorkoutEntry> entries;
+
 
     public Workout() {
-        entries = new ArrayList<WorkoutEntry>();
+
+        this.entries = new ArrayList<>();
     }
-
-
-
-    private void updateMaxRep() {
-        float max = 0;
-        for (WorkoutEntry entry : entries) {
-            if (entry.getAmmount() > max) {
-                max = entry.getAmmount();
-            }
-
-        }
-
-        this.maxRep = max;
-    }
-
 
     public String getName() {
         return name;
@@ -45,31 +34,29 @@ public class Workout {
         this.measurement = measurement;
     }
 
-    public ArrayList<String> getProgressions() {
-        return progressions;
-    }
-
-    public void setProgressions(ArrayList<String> progressions) {
-        this.progressions = progressions;
-    }
-
-    public void addProgression(String progression) {
-
-        this.progressions.add(progression);
-
-    }
-
     public float getMaxRep() {
-        return maxRep;
+
+        Comparator<Float> sorting = this.moreIsBetterSorting
+                ? (c1, c2) ->  Math.round(c1 - c2)
+                : (c1, c2) ->  Math.round(c2 - c1);
+
+        return this.entries.stream().map(e -> e.getAmmount()).max(sorting).get();
     }
 
-    public void setMaxRep(float maxRep) {
-        this.maxRep = maxRep;
+    public boolean isMoreIsBetterSorting() {
+        return moreIsBetterSorting;
+    }
+
+    public void setMoreIsBetterSorting(boolean moreIsBetterSorting) {
+        this.moreIsBetterSorting = moreIsBetterSorting;
     }
 
     public void addEntry(WorkoutEntry entry) {
         entries.add(entry);
-        updateMaxRep();
+    }
+
+    public ArrayList<WorkoutEntry> getEntries() {
+        return entries;
     }
 }
 

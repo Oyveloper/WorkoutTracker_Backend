@@ -12,10 +12,11 @@ public class WorkoutEntry {
     private int userId;
 
     private String workoutName;
-    private String progression;
     private Date date;
     private String measurement;
+    private boolean moreIsBetterSorting;
     private float ammount;
+
 
 
     public int getId() {
@@ -50,14 +51,6 @@ public class WorkoutEntry {
         this.workoutName = workoutName;
     }
 
-    public String getProgression() {
-        return progression;
-    }
-
-    public void setProgression(String progression) {
-        this.progression = progression;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -72,5 +65,13 @@ public class WorkoutEntry {
 
     public void setAmmount(float ammount) {
         this.ammount = ammount;
+    }
+
+    public boolean isMoreIsBetterSorting() {
+        return moreIsBetterSorting;
+    }
+
+    public void setMoreIsBetterSorting(boolean moreIsBetterSorting) {
+        this.moreIsBetterSorting = moreIsBetterSorting;
     }
 }
