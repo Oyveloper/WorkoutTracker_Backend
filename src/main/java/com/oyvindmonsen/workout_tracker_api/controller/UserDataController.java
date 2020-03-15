@@ -53,7 +53,7 @@ public class UserDataController {
 
     }
 
-    @GetMapping("/workoutlist")
+    @GetMapping("/workoutList")
     ResponseEntity<?> workoutList(@RequestHeader("Authorization") String jwt) {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(jwt));

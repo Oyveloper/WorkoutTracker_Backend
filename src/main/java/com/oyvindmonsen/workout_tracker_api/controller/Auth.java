@@ -107,7 +107,7 @@ public class Auth {
     }
 
     @GetMapping("/isAuthenticated")
-    public boolean isAuthenticated(@RequestHeader (name="Authentication") String auth) {
+    public boolean isAuthenticated(@RequestHeader (name="Authorization") String auth) {
 
         String jwt = null;
         String username = null;
@@ -117,7 +117,7 @@ public class Auth {
             username = jwtUtil.extractUsername(jwt);
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             return jwtUtil.validateToken(jwt, userDetails);
