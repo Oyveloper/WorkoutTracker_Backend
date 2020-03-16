@@ -1,23 +1,17 @@
 package com.oyvindmonsen.workout_tracker_api.controller;
 
-import com.oyvindmonsen.workout_tracker_api.model.AuthenticationResponse;
 import com.oyvindmonsen.workout_tracker_api.model.User;
 import com.oyvindmonsen.workout_tracker_api.model.UserRepository;
 import com.oyvindmonsen.workout_tracker_api.services.MyUserDetailsService;
 import com.oyvindmonsen.workout_tracker_api.util.JWTUtil;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Security;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -42,8 +36,8 @@ public class Auth {
 
     @PostMapping("/signup")
     @ResponseBody
-    ResponseEntity<String> signup(@RequestParam String email, @RequestParam String name, @RequestParam String password) throws JSONException {
-        JSONObject response = new JSONObject();
+    ApiResponse signup(@RequestParam String email, @RequestParam String name, @RequestParam String password) {
+        ApiResponse response = new ApiResponse();
 
 
 
@@ -57,8 +51,8 @@ public class Auth {
         });
 
         if (foundDuplicate.get()) {
-            response.put("status", "error");
-            response.put("cause", "User with email " + email + "already exists");
+            response.setStatus("error");
+            response.addData("cause", "User with email " + email + " already exists");
 
         } else {
 
@@ -76,33 +70,39 @@ public class Auth {
 
             final String jwt = jwtUtil.generateToken(userDetails);
 
-            response.put("status", "success");
+            response.setStatus("success");
 
-            response.put("jwt", jwt);
+            response.addData("jwt", jwt);
 
 
 
         }
 
-        return ResponseEntity.ok().body(response.toString());
+        return response;
     }
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) throws Exception{
+    public ApiResponse login(@RequestParam String email, @RequestParam String password){
+
+        ApiResponse response = new ApiResponse();
+
         try {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
             );
+            response.setStatus("success");
+
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            final String jwt = jwtUtil.generateToken(userDetails);
+
+            response.addData("jwt", jwt);
         } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            response.setStatus("error");
+            response.addData("cause", "Wrong email or password");
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
-        final String jwt = jwtUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return response;
 
     }
 
