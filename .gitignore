@@ -1,6 +1,5 @@
 HELP.md
-target/*
-!target/workout_tracker_api-2.2.1.jar
+target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
