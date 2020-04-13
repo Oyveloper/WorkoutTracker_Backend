@@ -3,7 +3,6 @@ spring:
     url: jdbc:${WORKOUT_DB_NAME}
     username: ${WORKOUT_DB_USER}
     password: ${WORKOUT_DB_SECRET_KEY}
-    driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       dialect: org.hibernate.dialect.MySQLInnoDBDialect
