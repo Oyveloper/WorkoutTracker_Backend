@@ -47,6 +47,7 @@ public class UserDataController {
         entry.setAmmount(ammount);
         entry.setMoreIsBetterSorting(moreIsGoodSorting);
 
+        
         entryRepo.save(entry);
 
         return ResponseEntity.ok().body("Success");
