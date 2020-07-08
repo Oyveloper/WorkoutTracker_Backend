@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:${WORKOUT_DB_NAME}
+    url: jdbc:${WORKOUT_DB_NAME}?serverTimezone=UTC
     username: ${WORKOUT_DB_USER}
     password: ${WORKOUT_DB_SECRET_KEY}
   jpa:

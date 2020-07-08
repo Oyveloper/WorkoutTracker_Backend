@@ -32,7 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         final String authorizationheader = request.getHeader("Authorization");
 
         String username = null;
-        String jwt = null;
+        String jwt = "";
 
 
         if (authorizationheader != null) {
